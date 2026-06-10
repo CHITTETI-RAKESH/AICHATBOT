@@ -1,9 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+from datetime import datetime
 
 db = SQLAlchemy()
 
 class User(UserMixin, db.Model):
+
+    __tablename__ = "users"
 
     id = db.Column(
         db.Integer,
@@ -27,8 +30,15 @@ class User(UserMixin, db.Model):
         nullable=False
     )
 
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
 
 class ChatHistory(db.Model):
+
+    __tablename__ = "chat_history"
 
     id = db.Column(
         db.Integer,
@@ -37,7 +47,7 @@ class ChatHistory(db.Model):
 
     user_id = db.Column(
         db.Integer,
-        nullable=False
+        db.ForeignKey("users.id")
     )
 
     question = db.Column(
@@ -52,5 +62,5 @@ class ChatHistory(db.Model):
 
     created_at = db.Column(
         db.DateTime,
-        server_default=db.func.now()
+        default=datetime.utcnow
     )
