@@ -84,3 +84,38 @@ def ask():
             response
         }
     )
+
+
+
+
+@chat.route("/history")
+
+@login_required
+
+def history():
+
+    chats = ChatHistory.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    output = []
+
+    for chat in chats:
+
+        output.append(
+            {
+                "question":
+                chat.question,
+
+                "answer":
+                chat.answer,
+
+                "time":
+                str(chat.created_at)
+            }
+        )
+
+    return jsonify(output)
+
+
+
