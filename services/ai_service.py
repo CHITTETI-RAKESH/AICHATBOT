@@ -1,11 +1,31 @@
 from openai import OpenAI
+
 from config import Config
 
 client = OpenAI(
-    api_key=Config.OPENAI_API_KEY
+    api_key=
+    Config.OPENAI_API_KEY
 )
 
-def generate_response(message):
+SYSTEM_PROMPT = """
+
+You are a highly intelligent AI Assistant.
+
+Capabilities:
+
+- Coding
+- Mathematics
+- Science
+- Writing
+- Reasoning
+- Research
+
+Always provide
+well structured answers.
+
+"""
+
+def ask_ai(messages):
 
     response = client.chat.completions.create(
 
@@ -13,21 +33,15 @@ def generate_response(message):
 
         messages=[
             {
-                "role": "system",
+                "role":"system",
                 "content":
-                """
-                You are an advanced AI assistant.
-                Provide accurate responses.
-                """
-            },
-            {
-                "role": "user",
-                "content": message
+                SYSTEM_PROMPT
             }
-        ],
+        ] + messages,
 
         temperature=0.7,
-        max_tokens=1000
+
+        max_tokens=1500
     )
 
     return response.choices[0].message.content
